@@ -1,4 +1,4 @@
-# This file contains the functions used to construct de DataFrames
+# This file contains the functions used to construct the DataFrames
 
 function transactions_df()
 	"""
