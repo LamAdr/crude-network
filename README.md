@@ -1,3 +1,3 @@
-Crude oil trade web visualisations using UN Comtrade Data.
+Crude oil trade web visualizations using UN Comtrade Data.
 
 Available at <https://crude-network.com>
