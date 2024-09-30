@@ -56,7 +56,7 @@ function ui()
         row([
             cell(class="st-col col-3",[
                 p("Period", class="row justify-center"),
-                slider(2019:1:2023, :period),
+                slider(2019:1:2023, :period, color="grey-5"),
                 p("{{period}}", class="row justify-center"),
             ]),
             # cell(class="st-col col-3",[
