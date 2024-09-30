@@ -14,7 +14,7 @@ function onchange_data_click(country, params)
         params.period
     )
 
-    return onchange_show_tradelines(params)
+    onchange_show_tradelines(params)
 end
 
 
@@ -38,7 +38,7 @@ function onchange_period(params)
         [0, import_zmax]
     )
 
-    return onchange_show_tradelines(params)
+    onchange_show_tradelines(params)
 end
 
 
