@@ -45,12 +45,10 @@ importers_trace = get_trade_trace(
 )
 
 active = []
-active_df = net_flow[in(active).(net_flow.Country), :]
-active_trace = choropleth(
-    locations = active_df[:, "Country"],
-    z = active_df[:, 1],
-    colorscale = [[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]],
-    marker =  Dict(:line => Dict(:color => "#FFFFFF", :width => 2))
+active_trace = get_active_trace(
+    active,
+    net_flow,
+    period
 )
 
 ### more params ###
@@ -67,7 +65,7 @@ params = CrudeTrade_params(
     active,
     period,
     show_tradelines,
-    active_df,
+    active_trace,
     exporters_trace,
     importers_trace,
 )
