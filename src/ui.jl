@@ -54,10 +54,14 @@ function ui()
     # final ui
     [
         row([
-            cell(class="st-col col-3",[
+            # cell(class="st-col col-3",[
+            cell(class="col justify-center",[
                 p("Period", class="row justify-center"),
                 slider(2019:1:2023, :period, color="grey-5"),
                 p("{{period}}", class="row justify-center"),
+            ]),
+            cell(class="st-col col-3 offset-md-3",[
+                a("About", href="about", class="row justify-center"),
             ]),
             # cell(class="st-col col-3",[
             #     p("Grouping", class="row justify-center"),
