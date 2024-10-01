@@ -49,33 +49,33 @@ function get_tradeline_traces(
     active,
     period,
 )
-    tradelines_df_E = df[in(active).(df.Exporter) .& (df.Period .== period), :]
-    tradelines_df_I = df[in(active).(df.Importer) .& (df.Period .== period), :]
+    relations_df_E = df[in(active).(df.Exporter) .& (df.Period .== period), :]
+    relations_df_I = df[in(active).(df.Importer) .& (df.Period .== period), :]
 
     export_tradeline_traces = [
         scattergeo(
-            lon = [tradelines_df_E[i, :lon_E], tradelines_df_E[i, :lon_I]],
-            lat = [tradelines_df_E[i, :lat_E], tradelines_df_E[i, :lat_I]],
+            lon = [relations_df_E[i, :lon_E], relations_df_E[i, :lon_I]],
+            lat = [relations_df_E[i, :lat_E], relations_df_E[i, :lat_I]],
             mode = "lines",
             line_width = 1,
             line_color = "red",
             showscale = false,
             hoverinfo="skip",
         )
-        for i in 1:nrow(tradelines_df_E)
+        for i in 1:nrow(relations_df_E)
     ]
 
     import_tradeline_traces = [
         scattergeo(
-            lon = [tradelines_df_I[i, :lon_E], tradelines_df_I[i, :lon_I]],
-            lat = [tradelines_df_I[i, :lat_E], tradelines_df_I[i, :lat_I]],
+            lon = [relations_df_I[i, :lon_E], relations_df_I[i, :lon_I]],
+            lat = [relations_df_I[i, :lat_E], relations_df_I[i, :lat_I]],
             mode = "lines",
             line_width = 1,
             line_color = "blue",
             showscale = false,
             hoverinfo="skip",
         )
-        for i in 1:nrow(tradelines_df_I)
+        for i in 1:nrow(relations_df_I)
     ]
 
     vcat(export_tradeline_traces, import_tradeline_traces)

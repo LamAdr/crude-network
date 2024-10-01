@@ -12,7 +12,7 @@ include(joinpath("src", "ui.jl"))
     @in data_click = Dict{String, Any}()
     @in active = []
     @in period = 2023
-    @in show_tradelines = false
+    @in show_relations = false
     # @in grouping = "None"
     # @in generate_histograms = false
 
@@ -51,9 +51,9 @@ include(joinpath("src", "ui.jl"))
         traces = onchange_period(params)
     end
 
-    @onchange show_tradelines begin
-        params.show_tradelines = show_tradelines
-        traces = onchange_show_tradelines(params)
+    @onchange show_relations begin
+        params.show_relations = show_relations
+        traces = onchange_show_relations(params)
     end
 
     # @onchange grouping begin

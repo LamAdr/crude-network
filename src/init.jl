@@ -9,7 +9,7 @@ netx = netx_df(transactions)
 
 ### params ###
 period = 2023
-show_tradelines = false
+show_relations = false
 netx_zmax = maximum(netx[:, "Qty"])
 netx_zmin = minimum(netx[:, "Qty"])
 
@@ -30,7 +30,7 @@ active_trace = get_active_trace(
 mutable struct CrudeTrade_params
     active::Array{String}
     period::Int
-    show_tradelines::Bool
+    show_relations::Bool
     active_trace::Any
     netx_trace::Any
 end
@@ -38,7 +38,7 @@ end
 params = CrudeTrade_params(
     active,
     period,
-    show_tradelines,
+    show_relations,
     active_trace,
     netx_trace,
 )

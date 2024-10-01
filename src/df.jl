@@ -109,7 +109,7 @@ function netx_df(transactions)
 	This fonction returns a df containing the net export of countries
 	"""
 
-	# groupby exporter / importer
+	# groupby exports / imports
 	exporters = combine(
 		groupby(transactions, [:Exporter, :Period]),
 		:Qty_mean => sum => :Total_export

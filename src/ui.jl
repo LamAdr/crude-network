@@ -12,7 +12,7 @@ function ui()
         <q-tab-panel name="map">
             <div class="row justify-center" style="margin-top: -20px;">
     """ *
-    """         <q-toggle label="Show trade lines" v-model="show_tradelines"></q-toggle>
+    """         <q-toggle label="Show trade lines" v-model="show_relations"></q-toggle>
             </div>
             <div class="row justify-center">""" *
     StipplePlotly.plot(
@@ -69,8 +69,8 @@ function ui()
         ], class="row justify-center"),
         # mytabs,
         """<div class="row justify-center" style="margin-top: -20px;">
-                <q-toggle label="Show trade lines" v-model="show_tradelines"></q-toggle>
-            </div>""",
+            <q-toggle label="Show relations of selected countries" v-model="show_relations"></q-toggle>
+        </div>""",
         StipplePlotly.plot(
             :traces,
             layout=:plotlayout,
