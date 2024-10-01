@@ -3,7 +3,7 @@
 function transactions_df()
 	"""
 	This function mirrors the data:
-		construct the data for countries thta do not report it from their partner's reports
+		construct the data for countries that do not report it from their partner's reports
 	"""
 
 	df = CSV.read(joinpath("data", "comtrade.csv"), DataFrame)
@@ -66,7 +66,7 @@ function transactions_df()
 					qty_asperE,
 					qty_asperI,
 					primaryValue_asperE,
-					primaryValue_asperI
+					primaryValue_asperI,
 				]
 			)
 			records[[string(period), exporter, importer]] = ii
@@ -104,52 +104,53 @@ function transactions_df()
 end
 
 
-function net_flow_df(exporters, importers)
+function netx_df(transactions)
 	"""
 	This fonction returns a df containing the net export of countries
 	"""
 
-	net_flow = DataFrame(
+	# groupby exporter / importer
+	exporters = combine(
+		groupby(transactions, [:Exporter, :Period]),
+		:Qty_mean => sum => :Total_export
+	)
+	importers = combine(
+	    groupby(transactions, [:Importer, :Period]),
+	    :Qty_mean => sum => :Total_import
+	)
+
+	netx = DataFrame(
 	    Period = Int[],
 	    Country = String[],
-	    Net_flow = Char[],
 	    Qty = Float64[]
 	)
 
 	for i in 1:nrow(exporters)
-	    local period = exporters[i, :Period]
 	    country = exporters[i, :Exporter]
+	    period = exporters[i, :Period]
 	    export_qty = exporters[i, :Total_export]
+	    # get the imports of `country`
 	    import_qty = importers[(importers.Importer .== country) .& (importers.Period .== period), :Total_import]
+
 	    if length(import_qty) == 0
 	        net_export = export_qty
 	    else
 	        net_export = export_qty - import_qty[1]
 	    end
-	    if net_export < 0
-	        continue
-	    else
-	        push!(net_flow, [period, country, 'X', net_export])
-	    end
+
+        push!(netx, [period, country, net_export])
 	end
 
+	# importers that have no export
 	for i in 1:nrow(importers)
-	    local period = importers[i, :Period]
 	    country = importers[i, :Importer]
-	    export_qty = exporters[(exporters.Exporter .== country) .& (exporters.Period .== period), :Total_export]
-	    import_qty = importers[i, :Total_import]
-	    if length(export_qty) == 0
-	        net_import = import_qty
-	    else
-	        net_import = import_qty - export_qty[1]
+	    if country in netx.Country
+			continue
 	    end
-	    if net_import <= 0
-	        continue
-	    else
-	        push!(net_flow, [period, country, 'M', net_import])
-	    end
+	    period = importers[i, :Period]
+        push!(netx, [period, country, importers[i, :Total_import]])
 	end
 
-	net_flow
+	netx
 
 end

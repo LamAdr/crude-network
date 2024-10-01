@@ -1,7 +1,6 @@
 # This file defines reactive functions
 
 function onchange_data_click(country, params)
-
     if country in params.active
         filter!(e -> e ≠ country, params.active)
     else
@@ -10,7 +9,7 @@ function onchange_data_click(country, params)
 
     params.active_trace = get_active_trace(
         params.active,
-        net_flow,
+        netx,
         params.period
     )
 
@@ -19,31 +18,14 @@ end
 
 
 function onchange_period(params)
-    params.exporters_trace = get_trade_trace(
-        net_flow,
-        "Country",
-        "Qty",
-        export_cs,
-        Dict("Period" => params.period, "Net_flow" => 'X'),
-        nothing,
-        [0, export_zmax]
-    )
-    params.importers_trace = get_trade_trace(
-        net_flow,
-        "Country",
-        "Qty",
-        import_cs,
-        Dict("Period" => params.period, "Net_flow" => 'M'),
-        nothing,
-        [0, import_zmax]
-    )
+    params.netx_trace = get_netx_trace(params.period)
 
     onchange_show_tradelines(params)
 end
 
 
 function onchange_show_tradelines(params)
-    traces = [params.exporters_trace, params.importers_trace, params.active_trace]
+    traces = [params.netx_trace, params.active_trace]
 
     if params.show_tradelines
         tradeline_traces = get_tradeline_traces(transactions, params.active, params.period)

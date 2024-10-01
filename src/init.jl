@@ -5,49 +5,24 @@ include("df.jl")
 
 transactions = transactions_df()
 
-exporters = combine(
-    groupby(transactions, [:Exporter, :Period]),
-    :Qty_mean => sum => :Total_export
-)
-importers = combine(
-    groupby(transactions, [:Importer, :Period]),
-    :Qty_mean => sum => :Total_import
-)
-
-net_flow = net_flow_df(exporters, importers)
+netx = netx_df(transactions)
 
 ### params ###
 period = 2023
 show_tradelines = false
-export_zmax = maximum(exporters[:, "Total_export"])
-import_zmax = maximum(importers[:, "Total_import"])
-export_cs = [[0, "#FFE9E9"], [1, "#FE9797"]]
-import_cs = [[0, "#E9EAFF"], [1, "#767FFF"]]
+netx_zmax = maximum(netx[:, "Qty"])
+netx_zmin = minimum(netx[:, "Qty"])
+
+zero = -netx_zmin / (netx_zmax - netx_zmin)
+netx_cs = [[0, "rgb(0, 0, 255)"], [zero, "rgb(255, 255, 255)"], [1, "rgb(255, 0, 0)"]]
 
 ### traces ###
-exporters_trace = get_trade_trace(
-    net_flow,
-    "Country",
-    "Qty",
-    export_cs,
-    Dict("Period" => period, "Net_flow" => 'X'),
-    nothing,
-    [0, export_zmax]
-)
-importers_trace = get_trade_trace(
-    net_flow,
-    "Country",
-    "Qty",
-    import_cs,
-    Dict("Period" => period, "Net_flow" => 'M'),
-    nothing,
-    [0, import_zmax]
-)
+netx_trace = get_netx_trace(period)
 
 active = []
 active_trace = get_active_trace(
     active,
-    net_flow,
+    netx,
     period
 )
 
@@ -57,8 +32,7 @@ mutable struct CrudeTrade_params
     period::Int
     show_tradelines::Bool
     active_trace::Any
-    exporters_trace::Any
-    importers_trace::Any
+    netx_trace::Any
 end
 
 params = CrudeTrade_params(
@@ -66,8 +40,7 @@ params = CrudeTrade_params(
     period,
     show_tradelines,
     active_trace,
-    exporters_trace,
-    importers_trace,
+    netx_trace,
 )
 
-traces = [exporters_trace, importers_trace]
+traces = [netx_trace]

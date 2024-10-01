@@ -1,31 +1,26 @@
 # This file defines functions that generate plotly traces
 
-function get_trade_trace(
-    df,
-    locations,
-    z,
-    colorscale,
-    filters,
-    active,
-    z_min_max,
-)
-    if !isnothing(active)
-        df = df[in(active).(df.Country), :]
-    end
+function get_netx_trace(period)
 
-    if !isnothing(filters)
-        for (key, value) in filters
-            df = df[(df[:, key] .== value), :]
-        end
-    end
+    netx_period = netx[netx.Period .== period, :]
 
-    choropleth(
-        locations = df[:, locations],
-        z = df[:, z],
-        zmin = z_min_max[1],
-        zmax = z_min_max[2],
-        colorscale = colorscale,
-        showscale = false,
+    range = netx_zmax - netx_zmin
+
+    return choropleth(
+        locations = netx_period[:, :Country],
+        z = netx_period[:, :Qty],
+        zmin = netx_zmin,
+        zmax = netx_zmax,
+        colorscale = netx_cs,
+        colorbar = Dict(
+            :thickness => 10,
+            :title => Dict(
+                :text => "net export"
+            ),
+            :tickmode => "array",
+            :ticktext => ["Exporter", "Importer"],
+            :tickvals => [netx_zmax - 0.1*range, netx_zmin + 0.1*range],
+        ),
         hoverinfo="location"
     )
 end
@@ -33,11 +28,11 @@ end
 
 function get_active_trace(
     active,
-    net_flow,
+    netx,
     period,
 )
 
-    active_df = net_flow[in(active).(net_flow.Country), :]
+    active_df = netx[in(active).(netx.Country), :]
 
     choropleth(
         locations = active_df[active_df.Period .== period, "Country"],
