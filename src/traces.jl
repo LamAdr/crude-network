@@ -6,7 +6,7 @@ function get_netx_trace(period)
 
     range = netx_zmax - netx_zmin
 
-    return choropleth(
+    choropleth(
         locations = netx_period[:, :Country],
         z = netx_period[:, :Qty],
         zmin = netx_zmin,
