@@ -13,7 +13,7 @@
 
     <h2 id="The website">The website</h2>
       <p>This website is for crude oil international trade stats and visualizations.</p>
-      <p>For now there's only a map. I plan on exploring graph/complex network stuff.</p>
+      <p>For now there's only a map. I plan on exploring graph/complex network stuff in the future.</p>
       <p>The backend is in Julia and uses GenieFramework and Plotly.</p>
 
     <h2 id="The data">The data</h2>
@@ -24,7 +24,7 @@
           <p>Rows that are not direct reports from countries. I think all these rows are UN aggregates, so they should not bear additional information.</p>
         </li>
         <li>
-          <p>Rows that are not imports or exports are dropped. This include things like re-exports/re-imports, so there is loss of information here, but it would be too complex to handle for now.</p>
+          <p>Rows that are not imports or exports. This include things like re-exports/re-imports, so there is loss of information here, but it would be too complex to handle for now.</p>
         </li>
       </ul>
       <p>For all periods, all transactions between the two same partners are aggregated by taking the sum of the quantities traded as reported by each partner. We obtain mirror data by taking the average of these two sums if each partner reported something, or by taking the available sum if only one partner reported something. Here would be the place to express relative confidence in the countries' reports by weighting the average. Net export is computed for every country by subtracting their imports from their exports.</p>
