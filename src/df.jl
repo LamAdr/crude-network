@@ -7,7 +7,7 @@ function transactions_df()
 	"""
 
 	df = CSV.read(joinpath("data", "comtrade.csv"), DataFrame)
-	centroids = CSV.read(joinpath("data", "centroids.csv"), DataFrame)
+	countries_info = CSV.read(joinpath("data", "countries_info.csv"), DataFrame)
 
 	# drop aggregate rows
 	df = df[df.isAggregate .== false, :]
@@ -87,16 +87,16 @@ function transactions_df()
 	transactions = rename!(
 	    leftjoin(
 	        transactions,
-	        centroids[:, [:lat, :lon, :ISO3]], on = :Exporter => :ISO3),
-	    :lat => :lat_E,
-	    :lon => :lon_E
+	        countries_info[:, [:centroid_lat, :centroid_lon, :ISO3]], on = :Exporter => :ISO3),
+	    :centroid_lat => :lat_E,
+	    :centroid_lon => :lon_E
 	)
 	transactions = rename!(
 	    leftjoin(
 	        transactions,
-	        centroids[:, [:lat, :lon, :ISO3]], on = :Importer => :ISO3),
-	    :lat => :lat_I,
-	    :lon => :lon_I
+	        countries_info[:, [:centroid_lat, :centroid_lon, :ISO3]], on = :Importer => :ISO3),
+	    :centroid_lat => :lat_I,
+	    :centroid_lon => :lon_I
 	)
 
 	transactions
@@ -149,6 +149,24 @@ function netx_df(transactions)
 	    end
 	    period = importers[i, :Period]
         push!(netx, [period, country, importers[i, :Total_import]])
+	end
+
+	# add countries not present
+	countries_info = CSV.read(joinpath("data", "countries_info.csv"), DataFrame)
+
+	from_period = minimum(netx[:, :Period])
+	to_period = maximum(netx[:, :Period])
+	all_countries = convert(Array, countries_info[:, :ISO3])
+
+	for p in from_period:to_period
+		countries_at_p = convert(Array, netx[netx.Period .== p, :Country])
+		diff = setdiff(all_countries, countries_at_p)
+		tmp_df = DataFrame(
+			Period = p,
+			Country = diff,
+			Qty = missing
+		)
+		netx = vcat(netx, tmp_df)
 	end
 
 	netx

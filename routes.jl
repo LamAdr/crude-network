@@ -28,7 +28,7 @@ include(joinpath("src", "ui.jl"))
             :pad => 0
         ),
         width = 800,
-        height = 400
+        height = 400,
     )
     # @out list_of_groupings = ["None", "All", "Selected", "Continents" , "Graph"]
     # @out histogram_traces = []

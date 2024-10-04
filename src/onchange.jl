@@ -18,14 +18,14 @@ end
 
 
 function onchange_period(params)
-    params.netx_trace = get_netx_trace(params.period)
+    params.netx_traces = get_netx_traces(params.period)
 
     onchange_show_relations(params)
 end
 
 
 function onchange_show_relations(params)
-    traces = [params.netx_trace, params.active_trace]
+    traces = vcat(params.netx_traces, params.active_trace)
 
     if params.show_relations
         tradeline_traces = get_tradeline_traces(transactions, params.active, params.period)
