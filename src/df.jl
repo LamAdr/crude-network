@@ -144,10 +144,10 @@ function netx_df(transactions)
 	# importers that have no export
 	for i in 1:nrow(importers)
 	    country = importers[i, :Importer]
-	    if country in netx.Country
+	    period = importers[i, :Period]
+	    if country in netx[netx.Period.== period, :Country]
 			continue
 	    end
-	    period = importers[i, :Period]
         push!(netx, [period, country, importers[i, :Total_import]])
 	end
 
